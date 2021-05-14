@@ -1,0 +1,9 @@
+
+.email, .password, .username, .cnf_password {
+    margin: 10px;
+    width: 100%;
+}
+
+.signup{
+    margin: 20px;
+}
