@@ -1,7 +1,38 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react';
 import './Post.css';
 import Avatar from '@material-ui/core/Avatar'
-const Post = ({imageUrl, caption,username}) => {
+import {db} from '../firebase'
+
+const Post = ({imageUrl, postId, user, caption, username}) => {
+
+    const [comments, setComments] = useState([]);
+    const [comment, setComment] = useState('');
+
+    useEffect(() => {
+        let unsubscribe ;
+        if(postId){
+            unsubscribe = db.collection("posts")
+            .doc(postId)
+            .collection("comments")
+            .onSnapshot((snap) => {
+                setComments(snap.docs.map(doc => doc.data()));
+            })
+        }
+
+        return () => {
+            unsubscribe();
+        }
+    }, [postId])
+
+    const post = (e) => {
+        e.preventDefault();
+        db.collection('posts').doc(postId).collection('comments').add({
+            text: comment,
+            username: user.displayName
+        });
+        setComment('');
+    }
+
     return (
         <div className='post'>
             <div className='post_header'>
@@ -24,6 +55,33 @@ const Post = ({imageUrl, caption,username}) => {
             <h4 className="post_text">
                 <strong>{username} </strong> {caption}
             </h4>
+
+            <div className="display_comment">
+                <h3>View All Comments</h3>
+                <div className="comments"> 
+                {
+                    comments.map(({text, username}) => {
+                        return (
+                            <p>
+                                <strong>{username}</strong> {text}
+                            </p>
+                        )
+                    })
+                }
+                </div>
+            </div>
+
+            <div className="comment_section">
+                <input 
+                    className="comment"
+                    type="text" 
+                    value={comment} 
+                    onChange={(e) => setComment(e.target.value)} 
+                    placeholder="Add a comment"
+                />
+                <button className="post_comment" type="button" onClick={post}>Post</button>
+            </div>
+
         </div>
     )
 }

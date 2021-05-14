@@ -6,7 +6,8 @@ import Login from './Login'
 import SignUp from './SignUp'
 import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
-import { Button, CircularProgress } from '@material-ui/core';
+import { Avatar, Button, CircularProgress } from '@material-ui/core';
+import ImageUpload from './ImageUpload';
 
 function getModalStyle() {
   const top = 50;
@@ -121,9 +122,16 @@ const login = (email, password) => {
         <div className="actions">
         {
           user ? 
-          <Button className="logout" variant="contained" color="primary" onClick={handleLogOut}>
-            Sign Out
-          </Button>
+          <div className="signed">
+            <Button className="logout" variant="contained" color="primary" onClick={handleLogOut}>
+              Sign Out
+            </Button>
+            <Avatar 
+                className="post_avatar"
+                alt={user.displayName.toUpperCase()}
+                src="/static/img/avatar/1.jpg"
+            />
+          </div>
           :
           <>
             <Button className="singin" variant="contained" color="primary" onClick={handleOpen}>
@@ -154,6 +162,13 @@ const login = (email, password) => {
         </Modal>
       </div>
       {
+        user?.displayName
+        ?
+        <ImageUpload username={user.displayName}/>
+        :
+        <h3>Login to upload</h3>
+      }
+      {
         loading 
         ?
         <div className='loader'>
@@ -163,6 +178,8 @@ const login = (email, password) => {
         posts.map(({id, post:{imageUrl,caption,username}}) => {
           return <Post 
                     key={id}
+                    postId={id}
+                    user={user}
                     imageUrl={imageUrl}
                     username={username}
                     caption={caption}   
