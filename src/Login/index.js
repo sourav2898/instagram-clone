@@ -33,6 +33,9 @@ const Login = ({signin}) => {
             </FormControl>
             <center>
                 <Button style={{margin:'20px'}} className="login" type="submit"  variant="contained" color="primary"> Login </Button>
+                <p className="not_user">
+                    Not a user?<Button color="primary" > Sign up </Button>
+                </p>
             </center>
         </form>
         </>

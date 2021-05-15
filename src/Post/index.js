@@ -3,7 +3,7 @@ import './Post.css';
 import Avatar from '@material-ui/core/Avatar'
 import {db} from '../firebase'
 
-const Post = ({imageUrl, postId, user, caption, username}) => {
+const Post = ({imageUrl, postId, user, caption, username,setOpen}) => {
 
     const [comments, setComments] = useState([]);
     const [comment, setComment] = useState('');
@@ -26,11 +26,19 @@ const Post = ({imageUrl, postId, user, caption, username}) => {
 
     const post = (e) => {
         e.preventDefault();
-        db.collection('posts').doc(postId).collection('comments').add({
-            text: comment,
-            username: user.displayName
-        });
-        setComment('');
+
+        if(user?.displayName){
+            if(comment!=='' || comment.trim()!==''){
+                db.collection('posts').doc(postId).collection('comments').add({
+                    text: comment,
+                    username: user.displayName
+                });
+                setComment('');
+            }
+        }else{
+            setOpen(true);
+        }
+
     }
 
     return (
@@ -57,12 +65,12 @@ const Post = ({imageUrl, postId, user, caption, username}) => {
             </h4>
 
             <div className="display_comment">
-                <h3>View All Comments</h3>
+               <h3>View All Comments</h3> 
                 <div className="comments"> 
                 {
-                    comments.map(({text, username}) => {
+                    comments.map(({text, username},index) => {
                         return (
-                            <p>
+                            <p key={index}>
                                 <strong>{username}</strong> {text}
                             </p>
                         )

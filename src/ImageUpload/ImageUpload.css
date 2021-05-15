@@ -1,0 +1,49 @@
+.image_upload{
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    width: 48%;
+    margin: 15px auto;
+    border: 2px solid lightblue;
+    padding: 10px 20px 10px 0;
+    border-radius: 10px;
+}
+
+.image_upload .title{
+    text-align: center;
+    font-weight: bold;
+    color: lightblue;
+}
+
+.error{
+    text-align: center;
+    font-weight: bold;
+    color: crimson;
+    margin-bottom: 10px;
+}
+
+.image_upload progress{
+    width: 100%;
+    margin: 10px;
+}
+
+.caption{
+    border: 1px solid lightgray;
+    border-radius: 10px;
+    padding: 10px;
+    margin: 5px;
+    outline: none;
+}
+
+.file{
+    margin: 5px;
+    text-align: center;
+    cursor: pointer;
+    align-items: center;
+}   
+
+@media only screen and (max-width: 600px) {
+    .image_upload{
+        width: 100%;
+    }
+  }

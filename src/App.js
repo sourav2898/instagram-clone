@@ -25,12 +25,15 @@ function getModalStyle() {
 const useStyles = makeStyles((theme) => ({
   paper: {
     position: 'absolute',
-    width: 400,
+    width: '40%',
     backgroundColor: theme.palette.background.paper,
     border: '2px solid #000',
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
     margin: '5px',
+    [theme.breakpoints.down('sm')]: {
+      width: '90%'
+    },
   },
 }));
 
@@ -48,6 +51,7 @@ function App() {
   };
 
   const handleOpenSignUp = () => {
+    setOpen(false);
     setOpenSignUp(true);
   };
 
@@ -162,13 +166,6 @@ const login = (email, password) => {
         </Modal>
       </div>
       {
-        user?.displayName
-        ?
-        <ImageUpload username={user.displayName}/>
-        :
-        <h3>Login to upload</h3>
-      }
-      {
         loading 
         ?
         <div className='loader'>
@@ -183,9 +180,22 @@ const login = (email, password) => {
                     imageUrl={imageUrl}
                     username={username}
                     caption={caption}   
+                    setOpen={setOpen}
                   />
         })
       }
+
+      <ImageUpload username={user?.displayName}  
+                    setOpen={setOpen}/>
+
+
+      {/* {
+        user?.displayName
+        ?
+        <ImageUpload username={user?.displayName}/>
+        :
+        <h3>Login to upload</h3>
+      } */}
     </div>
   );
 }
