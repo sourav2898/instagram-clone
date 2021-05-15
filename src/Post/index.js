@@ -6,9 +6,43 @@ import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import CommentIcon from '@material-ui/icons/Comment';
 import TelegramIcon from '@material-ui/icons/Telegram';
+import { makeStyles } from '@material-ui/core/styles';
+import { Modal } from '@material-ui/core';
+import Comments from '../Comments';
+import firebase from 'firebase';
+function getModalStyle() {
+    const top = 50;
+    const left = 50;
+  
+    return {
+      top: `${top}%`,
+      left: `${left}%`,
+      transform: `translate(-${top}%, -${left}%)`,
+      border: '10px solid ligntgray',
+      borderRadius: '20px', 
+    };
+  }
+  
+  const useStyles = makeStyles((theme) => ({
+    paper: {
+      position: 'absolute',
+      width: '40%',
+      backgroundColor: theme.palette.background.paper,
+      border: '2px solid #000',
+      boxShadow: theme.shadows[5],
+      padding: theme.spacing(2, 4, 3),
+      margin: '5px',
+      [theme.breakpoints.down('sm')]: {
+        width: '90%'
+      },
+    },
+  }));
 
 const Post = ({imageUrl, postId, user, caption, username,setOpen}) => {
 
+    const classes = useStyles();
+    const [modalStyle] = useState(getModalStyle);
+    const [openComment, setOpenComment] = useState(false);
     const [comments, setComments] = useState([]);
     const [comment, setComment] = useState('');
     const [likes,setLikes] = useState([]);
@@ -21,6 +55,7 @@ const Post = ({imageUrl, postId, user, caption, username,setOpen}) => {
             unsubscribe = db.collection("posts")
             .doc(postId)
             .collection("comments")
+            .orderBy('timestamp','desc')
             .onSnapshot((snap) => {
                 setComments(snap.docs.map(doc => doc.data()));
             });
@@ -46,6 +81,7 @@ const Post = ({imageUrl, postId, user, caption, username,setOpen}) => {
         if(user?.displayName){
             if(comment!=='' || comment.trim()!==''){
                 db.collection('posts').doc(postId).collection('comments').add({
+                    timestamp:firebase.firestore.FieldValue.serverTimestamp(),
                     text: comment,
                     username: user.displayName
                 });
@@ -55,6 +91,14 @@ const Post = ({imageUrl, postId, user, caption, username,setOpen}) => {
             setOpen(true);
         }
 
+    }
+
+    const handleClose = () => {
+        setOpenComment(false);
+    };
+
+    const handleOpenComment = () => {
+        setOpenComment(true);
     }
 
     const handleLike = () => {
@@ -125,7 +169,7 @@ const Post = ({imageUrl, postId, user, caption, username,setOpen}) => {
                     }
                 </div>
                 <div className="icon">
-                    <CommentIcon />
+                    <CommentIcon onClick={handleOpenComment}/>
                 </div>
                 <div className="icon">
                     <TelegramIcon />
@@ -141,7 +185,11 @@ const Post = ({imageUrl, postId, user, caption, username,setOpen}) => {
             </h4>
 
             <div className="display_comment">
-               <h3>View All Comments</h3> 
+               {
+                   comments.length > 0 ?
+                   <h3 style={{cursor:"pointer"}} onClick={handleOpenComment}>View All {comments.length} Comments</h3> 
+                   : null
+               }
                 <div className="comments"> 
                     <p>
                         <strong>{comments[0]?.username}</strong> {comments[0]?.text}
@@ -163,6 +211,14 @@ const Post = ({imageUrl, postId, user, caption, username,setOpen}) => {
                 } */}
                 </div>
             </div>
+            <Modal
+                open={openComment}
+                onClose={handleClose}
+                >
+                <div style={modalStyle} className={classes.paper}>
+                    <Comments comments={comments} comment={comment} setComment={setComment} post={post}/>
+                </div>
+            </Modal>
 
             <div className="comment_section">
                 <input 
