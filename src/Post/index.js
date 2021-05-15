@@ -108,23 +108,14 @@ const Post = ({imageUrl, postId, user, caption, username,setOpen}) => {
             setTimeout(() => {
                 setVisible(false);
             },1000);
-            // if(liked){
+            // if(!liked){
             //     db.collection('posts').doc(postId).collection('likes').add({
             //         like: true,
             //         username: user.displayName
             //     });
             // }
             // else{
-            //     let id;
-            //     likes.map((like) => {
-            //         if(like?.like?.username === user?.displayName){
-            //             id = liked.id;
-            //         } 
-            //     })
-            //     db.collection('posts').doc(postId).collection('likes').doc(id).set({
-            //         like: false,
-            //         username: user.displayName
-            //     });
+            //     db.collection('posts').doc(postId).collection('likes').remove();
             // }
         }
         else{

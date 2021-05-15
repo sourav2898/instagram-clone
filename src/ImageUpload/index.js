@@ -72,7 +72,7 @@ const ImageUpload = ({username,setOpen}) => {
             <p className="title"> Upload Image </p>
             <progress value={progress} max="100"/>
             <textarea className="caption" type="text" value={caption} placeholder="Enter a caption" onChange={(e) => setCaption(e.target.value)} />
-            <input id="file" className="file" type="file" onChange={handleChange}/>
+            <input id="file" className="file" type="file" accept="image/*" onChange={handleChange}/>
             {error && <p className="error">{error}</p>}
             <Button className="upload" style={{margin:"10px"}} variant='contained' color="secondary" onClick={handleUpload}>
                 Upload
