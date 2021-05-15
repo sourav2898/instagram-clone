@@ -59,6 +59,7 @@ const ImageUpload = ({username,setOpen}) => {
                     setCaption("");
                     setImage(null);
                     alert("Hurray!! Uploaded Successfully..");
+                    document.getElementById('file').value='';
                     window.scrollTo(500,0);
                 })
             }
@@ -71,7 +72,7 @@ const ImageUpload = ({username,setOpen}) => {
             <p className="title"> Upload Image </p>
             <progress value={progress} max="100"/>
             <textarea className="caption" type="text" value={caption} placeholder="Enter a caption" onChange={(e) => setCaption(e.target.value)} />
-            <input className="file" type="file" onChange={handleChange}/>
+            <input id="file" className="file" type="file" onChange={handleChange}/>
             {error && <p className="error">{error}</p>}
             <Button className="upload" style={{margin:"10px"}} variant='contained' color="secondary" onClick={handleUpload}>
                 Upload

@@ -177,7 +177,7 @@ const Post = ({imageUrl, postId, user, caption, username,setOpen}) => {
             </div>
 
             <div className="likes">
-                <strong>{likes.length} {likes.length>1 ? 'likes' : "like" }</strong>
+                <strong>{liked ? likes.length+1 : likes.length} {likes.length>1 ? 'likes' : "like" }</strong>
             </div>
             
             <h4 className="post_text">
