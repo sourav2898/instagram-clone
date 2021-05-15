@@ -67,7 +67,16 @@ const Post = ({imageUrl, postId, user, caption, username,setOpen}) => {
             <div className="display_comment">
                <h3>View All Comments</h3> 
                 <div className="comments"> 
-                {
+                    <p>
+                        <strong>{comments[0]?.username}</strong> {comments[0]?.text}
+                    </p>
+                    <p>
+                        <strong>{comments[1]?.username}</strong> {comments[1]?.text}
+                    </p>
+                    <p>
+                        <strong>{comments[2]?.username}</strong> {comments[2]?.text}
+                    </p>
+                {/* {
                     comments.map(({text, username},index) => {
                         return (
                             <p key={index}>
@@ -75,7 +84,7 @@ const Post = ({imageUrl, postId, user, caption, username,setOpen}) => {
                             </p>
                         )
                     })
-                }
+                } */}
                 </div>
             </div>
 

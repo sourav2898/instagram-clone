@@ -48,6 +48,7 @@ function App() {
 
   const handleOpen = () => {
     setOpen(true);
+    setOpenSignUp(false);
   };
 
   const handleOpenSignUp = () => {
@@ -153,7 +154,7 @@ const login = (email, password) => {
           onClose={handleClose}
         >
           <div style={modalStyle} className={classes.paper}>
-            <Login signin={login}/> 
+            <Login signin={login} handleOpenSignUp={handleOpenSignUp}/> 
           </div>
         </Modal>
         <Modal
@@ -161,7 +162,7 @@ const login = (email, password) => {
           onClose={handleCloseSignUp}
         >
           <div style={modalStyle} className={classes.paper}>
-            <SignUp signup={signup} /> 
+            <SignUp signup={signup} handleOpen={handleOpen} /> 
           </div>
         </Modal>
       </div>
