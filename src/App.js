@@ -133,7 +133,7 @@ const login = (email, password) => {
             </Button>
             <Avatar 
                 className="post_avatar"
-                alt={user.displayName.toUpperCase()}
+                alt={user.displayName}
                 src="/static/img/avatar/1.jpg"
             />
           </div>
