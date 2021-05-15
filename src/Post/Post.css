@@ -72,5 +72,6 @@
 @media only screen and (max-width: 600px) {
     .post{
         width: 100%;
+        border: 2px solid lightgray;
     }
   }
