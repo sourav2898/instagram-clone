@@ -2,27 +2,43 @@ import React, {useState, useEffect} from 'react';
 import './Post.css';
 import Avatar from '@material-ui/core/Avatar'
 import {db} from '../firebase'
+import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
+import FavoriteIcon from '@material-ui/icons/Favorite';
+import CommentIcon from '@material-ui/icons/Comment';
+import TelegramIcon from '@material-ui/icons/Telegram';
 
 const Post = ({imageUrl, postId, user, caption, username,setOpen}) => {
 
     const [comments, setComments] = useState([]);
     const [comment, setComment] = useState('');
+    const [likes,setLikes] = useState([]);
+    const [liked,setLiked] = useState(false);
+    const [visible, setVisible] = useState(false);
 
     useEffect(() => {
-        let unsubscribe ;
+        let unsubscribe ;let unsubscribe1 ;
         if(postId){
             unsubscribe = db.collection("posts")
             .doc(postId)
             .collection("comments")
             .onSnapshot((snap) => {
                 setComments(snap.docs.map(doc => doc.data()));
-            })
-        }
+            });
 
+            unsubscribe1 = db.collection("posts")
+            .doc(postId)
+            .collection("likes")
+            .onSnapshot((snap) => {
+                setLikes(snap.docs.map((doc) => ({id:doc.id,like:doc.data()})));
+            })
+        
+        }
         return () => {
+            unsubscribe1();
             unsubscribe();
         }
     }, [postId])
+
 
     const post = (e) => {
         e.preventDefault();
@@ -41,6 +57,37 @@ const Post = ({imageUrl, postId, user, caption, username,setOpen}) => {
 
     }
 
+    const handleLike = () => {
+        if(user?.displayName){
+            setLiked(!liked);
+            setVisible(true);
+            setTimeout(() => {
+                setVisible(false);
+            },1000);
+            // if(liked){
+            //     db.collection('posts').doc(postId).collection('likes').add({
+            //         like: true,
+            //         username: user.displayName
+            //     });
+            // }
+            // else{
+            //     let id;
+            //     likes.map((like) => {
+            //         if(like?.like?.username === user?.displayName){
+            //             id = liked.id;
+            //         } 
+            //     })
+            //     db.collection('posts').doc(postId).collection('likes').doc(id).set({
+            //         like: false,
+            //         username: user.displayName
+            //     });
+            // }
+        }
+        else{
+            setOpen(true);
+        }
+    } 
+
     return (
         <div className='post'>
             <div className='post_header'>
@@ -57,7 +104,36 @@ const Post = ({imageUrl, postId, user, caption, username,setOpen}) => {
                     className="post_img"
                     src={imageUrl}
                     alt="Instagram"
+                    onDoubleClick={handleLike}
                 />
+                <div className="like_status">
+                    {
+                        liked ?
+                        visible && <FavoriteIcon style={{fontSize:"100px",color:"red"}} onClick={handleLike}/>
+                        : visible &&  <FavoriteBorderIcon style={{fontSize:"100px"}} onClick={handleLike}/>
+                    }
+                </div>
+            </div>
+
+            <div className="acts">
+                <div className="icon">
+                    {
+                        liked ?
+                        <FavoriteIcon style={{color:"red"}} onClick={handleLike}/>
+                        : 
+                        <FavoriteBorderIcon onClick={handleLike}/>
+                    }
+                </div>
+                <div className="icon">
+                    <CommentIcon />
+                </div>
+                <div className="icon">
+                    <TelegramIcon />
+                </div>
+            </div>
+
+            <div className="likes">
+                <strong>{likes.length} {likes.length>1 ? 'likes' : "like" }</strong>
             </div>
             
             <h4 className="post_text">
