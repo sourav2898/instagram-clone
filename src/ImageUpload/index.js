@@ -2,6 +2,7 @@ import { Button } from '@material-ui/core';
 import React, {useState} from 'react'
 import {storage, db} from '../firebase'
 import './ImageUpload.css';
+import firebase from 'firebase';
 
 const ImageUpload = ({username,setOpen}) => {
 
@@ -48,6 +49,7 @@ const ImageUpload = ({username,setOpen}) => {
                 .getDownloadURL()
                 .then((url) => {
                     db.collection("posts").add({
+                        timestamp:firebase.firestore.FieldValue.serverTimestamp(),
                         caption: caption,
                         imageUrl: url,
                         username: username
@@ -56,6 +58,8 @@ const ImageUpload = ({username,setOpen}) => {
                     setProgress(0);
                     setCaption("");
                     setImage(null);
+                    alert("Hurray!! Uploaded Successfully..");
+                    window.scrollTo(500,0);
                 })
             }
             )
