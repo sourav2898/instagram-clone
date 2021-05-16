@@ -66,6 +66,7 @@ function App() {
 
   const handleLogOut = () => {
     auth.signOut();
+    window.location.reload();
   }
 
   useEffect(() => {

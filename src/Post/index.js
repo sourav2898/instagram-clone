@@ -50,7 +50,13 @@ const Post = ({imageUrl, postId, user, caption, username,setOpen}) => {
     const [visible, setVisible] = useState(false);
 
     useEffect(() => {
-        let unsubscribe ;let unsubscribe1 ;
+        const arr = likes.filter((like) => like.like.username === user?.displayName);
+        if(arr.length>0) setLiked(true);
+    },[likes,user])
+
+    useEffect(() => {
+        let unsubscribe ;
+        let unsubscribe1 ;
         if(postId){
             unsubscribe = db.collection("posts")
             .doc(postId)
@@ -59,21 +65,20 @@ const Post = ({imageUrl, postId, user, caption, username,setOpen}) => {
             .onSnapshot((snap) => {
                 setComments(snap.docs.map(doc => doc.data()));
             });
-
+        
             unsubscribe1 = db.collection("posts")
             .doc(postId)
             .collection("likes")
             .onSnapshot((snap) => {
                 setLikes(snap.docs.map((doc) => ({id:doc.id,like:doc.data()})));
             })
-        
         }
+
         return () => {
-            unsubscribe1();
             unsubscribe();
+            unsubscribe1();
         }
     }, [postId])
-
 
     const post = (e) => {
         e.preventDefault();
@@ -108,20 +113,31 @@ const Post = ({imageUrl, postId, user, caption, username,setOpen}) => {
             setTimeout(() => {
                 setVisible(false);
             },1000);
-            // if(!liked){
-            //     db.collection('posts').doc(postId).collection('likes').add({
-            //         like: true,
-            //         username: user.displayName
-            //     });
-            // }
-            // else{
-            //     db.collection('posts').doc(postId).collection('likes').remove();
-            // }
+            console.log(likes);
+            if(!liked && !checkLike()){
+                db.collection('posts').doc(postId).collection('likes').add({
+                    like: true,
+                    username: user.displayName
+                });
+            }
+            else{
+                const arr = likes.filter((like) => like.like.username === user?.displayName);
+                console.log(arr);
+                if(arr.length>0){
+                    db.collection('posts').doc(postId).collection('likes').doc(arr[0].id).delete();
+                }
+            }
         }
         else{
             setOpen(true);
         }
     } 
+
+    const checkLike = () => {
+        const arr = likes.filter((like) => like.like.username === user?.displayName);
+        // console.log(arr);
+        return arr.length>0 ? true : false;
+    }
 
     return (
         <div className='post'>
@@ -168,7 +184,7 @@ const Post = ({imageUrl, postId, user, caption, username,setOpen}) => {
             </div>
 
             <div className="likes">
-                <strong>{liked ? likes.length+1 : likes.length} {likes.length>1 ? 'likes' : "like" }</strong>
+                <strong>{likes.length} {likes.length>1 ? 'likes' : "like" }</strong>
             </div>
             
             <h4 className="post_text">

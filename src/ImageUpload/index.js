@@ -10,6 +10,7 @@ const ImageUpload = ({username,setOpen}) => {
     const [image,setImage] = useState(null);
     const [progress,setProgress] = useState(0);
     const [error,setError] = useState('');
+    const [uploading,setUploading] = useState(false);
 
     const handleChange = (e) => {
         if(e.target.files[0]){
@@ -29,6 +30,7 @@ const ImageUpload = ({username,setOpen}) => {
         }
 
         else{
+            setUploading(true);
             const uploadTask = storage.ref(`images/${image.name}`).put(image);
             uploadTask.on(
                 "state_changed",
@@ -61,6 +63,16 @@ const ImageUpload = ({username,setOpen}) => {
                     alert("Hurray!! Uploaded Successfully..");
                     document.getElementById('file').value='';
                     window.scrollTo(500,0);
+                    setUploading(false);    
+                })
+                .catch((error) => {
+                    console.log("error while uploading", error);
+                    alert("Sorry there was an error while uploadin....Please try after some time.Thank you!!");
+                    setUploading(false);
+                    setProgress(0);
+                    setCaption("");
+                    document.getElementById('file').value='';
+                    setImage(null);
                 })
             }
             )
@@ -74,9 +86,18 @@ const ImageUpload = ({username,setOpen}) => {
             <textarea className="caption" type="text" value={caption} placeholder="Enter a caption" onChange={(e) => setCaption(e.target.value)} />
             <input id="file" className="file" type="file" accept="image/*" onChange={handleChange}/>
             {error && <p className="error">{error}</p>}
-            <Button className="upload" style={{margin:"10px"}} variant='contained' color="secondary" onClick={handleUpload}>
-                Upload
-            </Button>
+            
+            {
+                !uploading 
+                ?
+                <Button className="upload" style={{margin:"10px"}} variant='contained' color="secondary" onClick={handleUpload}>
+                    Upload
+                </Button>
+                : 
+                <center>
+                    <p className="erro">Uploading.... Just a minute!!!</p>
+                </center>
+            }
         </div>
     )
 }
