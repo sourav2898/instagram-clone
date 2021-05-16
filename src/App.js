@@ -172,6 +172,7 @@ const login = (email, password) => {
         ?
         <div className='loader'>
           <CircularProgress />
+          <p> Loading... Fetching data... </p>
         </div>
         :
         posts.map(({id, post:{imageUrl,caption,username}}) => {
