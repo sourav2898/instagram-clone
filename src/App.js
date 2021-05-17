@@ -45,6 +45,7 @@ function App() {
   const [loading, isLoading] = useState(true);
   const [user, setUser] = useState(null);
   const [posts,setPosts] = useState([]);
+  const [signLoader,setSignLoader] = useState(false);
 
   const handleOpen = () => {
     setOpen(true);
@@ -90,23 +91,27 @@ function App() {
 
 const signup = (email, password,username) => {
   console.log(email, password);
+  setSignLoader(true);
   auth.createUserWithEmailAndPassword(email,password)
   .then((authUser) => {
     setOpenSignUp(false);  
+    setSignLoader(false);
     return authUser.user.updateProfile({
           displayName: username
       })
   })
-  .catch((error) => alert(error.message))
+  .catch((error) => {setSignLoader(false);alert(error.message);})
 
 }
 
 const login = (email, password) => {
+  setSignLoader(true);
   auth.signInWithEmailAndPassword(email,password)
   .then(() => {
     setOpen(false);
+    setSignLoader(false);
   })
-  .catch((error) => alert(error.message))
+  .catch((error) => {setSignLoader(false);alert(error.message)})
 }
 
   useEffect(() => {
@@ -140,6 +145,7 @@ const login = (email, password) => {
           </div>
           :
           <>
+
             <Button className="singin" variant="contained" color="primary" onClick={handleOpen}>
               Sign In
             </Button>
@@ -155,7 +161,7 @@ const login = (email, password) => {
           onClose={handleClose}
         >
           <div style={modalStyle} className={classes.paper}>
-            <Login signin={login} handleOpenSignUp={handleOpenSignUp}/> 
+            <Login loader={signLoader} signin={login} handleOpenSignUp={handleOpenSignUp}/> 
           </div>
         </Modal>
         <Modal
@@ -163,7 +169,7 @@ const login = (email, password) => {
           onClose={handleCloseSignUp}
         >
           <div style={modalStyle} className={classes.paper}>
-            <SignUp signup={signup} handleOpen={handleOpen} /> 
+            <SignUp loader={signLoader} signup={signup} handleOpen={handleOpen} /> 
           </div>
         </Modal>
       </div>

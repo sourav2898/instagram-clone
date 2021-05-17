@@ -1,8 +1,8 @@
 import React, {useState} from 'react'
-import { Button, FormControl, Input, InputLabel } from '@material-ui/core';
+import { Button, CircularProgress, FormControl, Input, InputLabel } from '@material-ui/core';
 import './Login.css'
 
-const Login = ({signin,handleOpenSignUp}) => {
+const Login = ({signin,handleOpenSignUp,loader}) => {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -68,6 +68,12 @@ const Login = ({signin,handleOpenSignUp}) => {
                 {error?.password && <p className="error">{error?.password}</p>}
             </FormControl>
             <center>
+            {
+                loader 
+                ?
+                <CircularProgress color="secondary"/>
+                :
+                <>
                 <Button style={{margin:'20px'}} className="login" type="submit"  variant="contained" color="primary"> Login </Button>
                 <p className="not_user">
                     Not a user?
@@ -75,6 +81,9 @@ const Login = ({signin,handleOpenSignUp}) => {
                         Sign Up
                     </Button>
                 </p>
+                </>
+            }
+                
             </center>
         </form>
         </>

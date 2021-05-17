@@ -1,8 +1,8 @@
-import { Button, FormControl, Input, InputLabel } from '@material-ui/core';
+import { Button, CircularProgress, FormControl, Input, InputLabel } from '@material-ui/core';
 import React, {useState} from 'react'
 import './Signup.css'
 
-const SignUp = ({signup,handleOpen}) => {
+const SignUp = ({loader,signup,handleOpen}) => {
     
     const [email, setEmail] = useState('');
     const [username, setUsername] = useState('');
@@ -86,6 +86,12 @@ const SignUp = ({signup,handleOpen}) => {
                     {error?.password && <p className="error">{error?.password}</p>}
                 </FormControl>
                 <center>
+                {
+                    loader
+                    ?
+                    <CircularProgress color="secondary"/>
+                    :
+                    <>
                     <Button style={{margin:'20px'}} className="signup" type="submit"  variant="contained" color="primary"> SignUp </Button>
                     <p className="not_user">
                         Already an user?
@@ -93,6 +99,8 @@ const SignUp = ({signup,handleOpen}) => {
                             Sign In
                         </Button>
                     </p>
+                    </>
+                }
                 </center>
             </form>
         </>
